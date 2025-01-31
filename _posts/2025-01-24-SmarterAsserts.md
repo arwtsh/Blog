@@ -73,8 +73,10 @@ Unreal has quite a few options for error handling.
     {
       if(!bIsInitialized)
       {
+        // Print to log
         UE_LOG(LogTemp, Error, TEXT("Object pools need to be initialized before an object can be requested from it."));
 
+        // Print to screen
         if (GEngine)
         {
           GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Object pools need to be initialized before an object can be requested from it."));
