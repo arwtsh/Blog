@@ -22,6 +22,7 @@ This article only considers errors created by the programmers working on a game 
 
 Unreal has quite a few options for error handling.
 ### 1. [Exception Handling](https://www.geeksforgeeks.org/exception-handling-c/){: target="_blank"}
+<a href="example.com" target="_blank">New Tab</a>
   
   If you're familiar with C++, you might know what this is. While Unreal is built in C++, it does not support exceptions. It may be possible in very specific use cases, but it is better to not upset Unreal (it's an angry master). Instead, return a bool or enum that represents the error and pass the output by reference in the parameters.
   
