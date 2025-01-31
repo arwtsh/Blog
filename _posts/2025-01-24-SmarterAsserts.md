@@ -124,3 +124,15 @@ Unreal has quite a few options for error handling.
   > This form of error handling is only good when everyone testing the game has a debugger attached (such as running Unreal from Visual Studio, Rider, or another IDE). If a Blueprint-only programmer or designer opened the .uproject directly, an assert will completely crash the editor.
   {: .prompt-warning }
 
+## Problem
+
+When I was creating an object pooling system, I set it up so the `Initialize` or `InitializeAsync` functions would need to be called on the object pool before it can be used. At the time, I was the only C++ programmer on the team. The designers or Blueprint programmers would be the ones who would use my system to create a weapon system, enemy drop system, and any other system that would benefit from object pooling. 
+
+I had to find the best way to handle the error of what would happen if they tried to use the object pool without initializing it. Naturally, they should know to Initialize it first because of the documentation, but everyone makes mistakes in game dev. Even me, and I'm the one that programmed the object pooling system! 
+
+If I used the `Exception Handling` method, then it would be up to the other team members to handle what would happen if an error occured. This is very easy to ignore, though. (Which they most likely would do if they didn't look at the documentation to call Initialize first.) 
+
+If I used the `Print to Log` method, I would have to print to the screen. The other team members don't look in the log often, and if they would, it would most likely be flooded with other Unreal messages, making my error message less visible. Printing to the screen is more visible, but still not as obvious as it could be. Also, the code for printing to the screen is big and clunky. 
+
+If I used `Asserts`, then the other team members would be very annoyed. They don't normally run Unreal with a debugger, so they would have to restart the entire editor after it crashes. While this would successfully notify them of the error they made, it is a *little* to extreme.
+
