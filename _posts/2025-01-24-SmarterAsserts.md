@@ -47,7 +47,15 @@ Unreal has quite a few options for error handling.
   ```
   {: file='ObjectPool.cpp'}
 
-### 2. [Print to log](https://dev.epicgames.com/documentation/en-us/unreal-engine/logging-in-unreal-engine)
+  Functions created in Blueprint are also able to have multiple outputs.
+
+  > This is good for core or backend mechanics. In this example, a weapon can execute custom logic when it fails to fire a projectile from the pool. This is more explicit than the object pool returning a nullptr.
+  {: .prompt-tip }
+
+  > This can make APIs cluttered. Also, it can be disruptive to C++ programmers who have to use the out parameter as the real returned value.
+  {: .prompt-warning }
+
+### 2. [Print to Log](https://dev.epicgames.com/documentation/en-us/unreal-engine/logging-in-unreal-engine)
   
   Displays an error message of some sort. In Unreal, there are two main destinations for output, the log and the on-screen debug messages. Unfortunantly, not every developer looks in the output log, and the on-screen message can be missed if it times out or gets pushed offscreen by newer messages.
   
@@ -78,6 +86,14 @@ Unreal has quite a few options for error handling.
   ```
   {: file='ObjectPool.cpp'}
 
+  The Blueprint function `Print String` or `Print Text` can output to the screen and log.
+
+  > This is good for minor or non-fatal errors. Idealy, a programmer would notice the error, find why the error occured, and then fix the bug.
+  {: .prompt-tip }
+
+  > Programmers might not notice the error, or purposefully ignore it thinking it doesn't have any impact on what they are currently testing. Unlike Unity, errors logged will NOT pause the game.
+  {: .prompt-warning }
+
 ### 3. [Asserts](https://dev.epicgames.com/documentation/en-us/unreal-engine/asserts-in-unreal-engine)
   
   Completely crash the engine and bring up the crash reporter. Unreal has several macros that help the engine correctly crash. This is C++ only, and is Unreal's suggested method of handling errors in C++. If you are debugging from Visual Studio, Rider, or other IDE, it will create a breakpoint instead of completely crashing the game.
@@ -102,4 +118,9 @@ Unreal has quite a few options for error handling.
     }
   ```
   {: file='ObjectPool.cpp'}
+
+  Unreal does not have any Blueprint nodes that assert.
+
+  > This form of error handling is only good when everyone testing the game has a debugger attached (such as running Unreal from Visual Studio, Rider, or another IDE). If a Blueprint-only programmer or designer opened the .uproject directly, an assert will completely crash the editor.
+  {: .prompt-warning }
 
