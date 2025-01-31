@@ -21,7 +21,7 @@ This article only considers errors created by the programmers working on a game 
 ## Existing Error Handling
 
 Unreal has quite a few options for error handling.
-### 1. [Exception Handling](https://www.geeksforgeeks.org/exception-handling-c/){: target="_blank"}
+### 1. [Exception Handling](https://www.geeksforgeeks.org/exception-handling-c/)
   
   If you're familiar with C++, you might know what this is. While Unreal is built in C++, it does not support exceptions. It may be possible in very specific use cases, but it is better to not upset Unreal (it's an angry master). Instead, return a bool or enum that represents the error and pass the output by reference in the parameters.
   
@@ -47,7 +47,7 @@ Unreal has quite a few options for error handling.
   ```
   {: file='ObjectPool.cpp'}
 
-### 2. [Print to log](https://dev.epicgames.com/documentation/en-us/unreal-engine/logging-in-unreal-engine){: target="_blank"}
+### 2. [Print to log](https://dev.epicgames.com/documentation/en-us/unreal-engine/logging-in-unreal-engine)
   
   Displays an error message of some sort. In Unreal, there are two main destinations for output, the log and the on-screen debug messages. Unfortunantly, not every developer looks in the output log, and the on-screen message can be missed if it times out or gets pushed offscreen by newer messages.
   
@@ -78,7 +78,7 @@ Unreal has quite a few options for error handling.
   ```
   {: file='ObjectPool.cpp'}
 
-### 3. [Asserts](https://dev.epicgames.com/documentation/en-us/unreal-engine/asserts-in-unreal-engine){: target="_blank"}
+### 3. [Asserts](https://dev.epicgames.com/documentation/en-us/unreal-engine/asserts-in-unreal-engine)
   
   Completely crash the engine and bring up the crash reporter. Unreal has several macros that help the engine correctly crash. This is C++ only, and is Unreal's suggested method of handling errors in C++. If you are debugging from Visual Studio, Rider, or other IDE, it will create a breakpoint instead of completely crashing the game.
 
