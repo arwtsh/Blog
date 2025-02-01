@@ -167,3 +167,10 @@ return;
 
 `scheck` is not intended for C++ only code. Before `scheck` smartly asserts the PIE session, it makes several checks to ensure it is a PIE session and not standalone, the editor exists, and the C++ code's execution started from Blueprint. If any of these checks fail, then it will assert regularly, crashing the application. Fortunantly, this is expected, since the programmer is either working in C++ and the debugger will catch the assertion or it is a build of the game so it should crash completely.
 
+## How to Install
+
+You can find the source code on [GitHub](https://github.com/jjasundry/SmartAsserts), along with the documentation in the readme. It is also published onto the Epic Marketplace (now Fab) as a [plugin](https://www.fab.com/listings/fbe2cfc8-c483-4c9b-a2ab-5d9090b1d6a4) The Epic launcher can install the plugin to Unreal automatically.
+
+## Demo
+
+{% include embed/youtube.html id='aPtgD8KEmoE' %}
