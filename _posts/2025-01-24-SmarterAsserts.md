@@ -16,7 +16,7 @@ Error handling is very important in computer programming. It is how most program
 
 If you have read to this point, you probably don't need the dictionary explanation of an error. Instead, I will specify what types of errors this article is about. Unreal is written in C++, and although the source code is able to be modified and recompiled, this article does not consider error handling in the language or Unreal itself. (Thread-safe, memory leaks, hardware restrictions)
 
-This article only considers errors created by the programmers working on a game made in Unreal. Both custom C++ code and Blueprint scripts can have errors. Null pointer errors are the most common, but other runtime errors can also apply. There are some logic errors which can have Error handling, but only those that can be forseen. A good example of this is sequence-breaking the game. If a player goes into an area they shouldn't be in, it wouldn't be that difficult for a programmer to add a check to move the player to an appropriate position. A bad example would be the player getting stuck in geometry, since making a check to see if the player is stuck would require editing Unreal's source code.
+This article only considers errors created by the programmers working on a game made in Unreal. Both custom C++ code and Blueprint scripts can have errors. Null pointer errors are the most common, but other runtime errors can also apply. There are some logic errors which can have Error handling, but only those that can be foreseen. A good example of this is sequence-breaking the game. If a player goes into an area they shouldn't be in, it wouldn't be that difficult for a programmer to add a check to move the player to an appropriate position. A bad example would be the player getting stuck in geometry, since making a check to see if the player is stuck would require editing Unreal's source code.
 
 ## Existing Error Handling
 
@@ -29,7 +29,7 @@ Unreal has quite a few options for error handling.
     bool bIsInitialized;
     
     // Returns true if there is no error
-    // @param result The objected activated in the pool.
+    // @param result The object activated in the pool.
     UFUNCTION(BlueprintCallable)
     bool UObjectPool::Request(UPoolableObject*& result);
   ```
@@ -57,12 +57,12 @@ Unreal has quite a few options for error handling.
 
 ### 2. [Print to Log](https://dev.epicgames.com/documentation/en-us/unreal-engine/logging-in-unreal-engine)
   
-  Displays an error message of some sort. In Unreal, there are two main destinations for output, the log and the on-screen debug messages. Unfortunantly, not every developer looks in the output log, and the on-screen message can be missed if it times out or gets pushed offscreen by newer messages.
+  Displays an error message of some sort. In Unreal, there are two main destinations for output, the log and the on-screen debug messages. unfortunately, not every developer looks in the output log, and the on-screen message can be missed if it times out or gets pushed offscreen by newer messages.
   
   ```cpp
     bool bIsInitialized;
 
-    // Returns the objected activated in the pool.
+    // Returns the object activated in the pool.
     UFUNCTION(BlueprintCallable)
     UPoolableObject* UObjectPool::Request();
   ```
@@ -90,7 +90,7 @@ Unreal has quite a few options for error handling.
 
   The Blueprint function `Print String` or `Print Text` can output to the screen and log.
 
-  > This is good for minor or non-fatal errors. Idealy, a programmer would notice the error, find why the error occured, and then fix the bug.
+  > This is good for minor or non-fatal errors. Idealy, a programmer would notice the error, find why the error occurred, and then fix the bug.
   {: .prompt-tip }
 
   > Programmers might not notice the error, or purposefully ignore it thinking it doesn't have any impact on what they are currently testing. Unlike Unity, errors logged will NOT pause the game.
@@ -103,8 +103,7 @@ Unreal has quite a few options for error handling.
   ```cpp
     bool bIsInitialized;
     
-    // Returns true if there is no error
-    // @param result The objected activated in the pool.
+    // Returns the object activated in the pool.
     UFUNCTION(BlueprintCallable)
     UPoolableObject* UObjectPool::Request();
   ```
@@ -136,18 +135,18 @@ If I used the `Exception Handling` method, then it would be up to the other team
 
 If I used the `Print to Log` method, I would have to print to the screen. The other team members don't look in the log often, and if they would, it would most likely be flooded with other Unreal messages, making my error message less visible. Printing to the screen is more visible, but still not as obvious as it could be. Also, the code for printing to the screen is big and clunky. 
 
-If I used `Asserts`, then the other team members would be very annoyed. They don't normally run Unreal with a debugger, so they would have to restart the entire editor after it crashes. While this would successfully notify them of the error they made, it is a *little* to extreme.
+If I used `Asserts`, then the other team members would be very annoyed. They don't normally run Unreal with a debugger, so they would have to restart the entire editor after it crashes. While this would successfully notify them of the error they made, it is a *little* too extreme.
 
 ## Solution 
 
 There should be a way to crash the game, known as Play-In-Editor (PIE), without crashing the entire editor. Unreal doesn't have any natural way of this happening. In my research, I noticed pieces of an unimplemented system that is supposed to pause the game whenever an error happens in Blueprint. This inspired me, so I worked on creating my own way to crash just the PIE session. I called this `Smart Asserts`.
 
 ![Message Log Example](assets/img/posts/smarter_asserts/MessageLogExample.png){: width="960" height="510" .w-50 .right}
-There is a second form of output that unreal can print to other than the Output Log. This is the Message Log. When an error is sent to this output, it will pop up automatically when the PIE session ends. This normally happens with `Blueprint Runtime Errors`, such as when a function is called on a nullptr. With those errors, Unreal is smart enough to ignore the function call, preventing any actual errors that would crash the game.
+There is a second form of output that Unreal can print to other than the Output Log. This is the Message Log. When an error is sent to this output, it will pop up automatically when the PIE session ends. This normally happens with `Blueprint Runtime Errors`, such as when a function is called on a nullptr. With those errors, Unreal is smart enough to ignore the function call, preventing any actual errors that would crash the game.
  
-However, I want the game to crash. I created a macro, `scheck`, meaning safe check, that would output a message to the log and then call the function `UKismetSystemLibrary::QuitGame`. This makes the game "crash" at the end of the current frame. With this, when `scheck` was called it would exit the game and open up the message log, making it obvious there was an error. Unfortunantly, all the code in the frame would still execute, so any code that relied on the function that threw the `scheck` would still execute. There is no way to completely stop this from happening.
+However, I want the game to crash. I created a macro, `scheck`, meaning safe check, that would output a message to the log and then call the function `UKismetSystemLibrary::QuitGame`. This makes the game "crash" at the end of the current frame. With this, when `scheck` was called it would exit the game and open up the message log, making it obvious there was an error. unfortunately, all the code in the frame would still execute, so any code that relied on the function that threw the `scheck` would still execute. There is no way to completely stop this from happening.
 
-There is a way to mitigate the amount of code that executes, though. Unreal has a feature that isn't as used as often as it should. Just like in C++, C#, and other languages. Blueprints can have breakpoints. Calling the function `FKismetDebugUtilities::RequestSingleStepIn` forces the editor into debug mode and prevents the execution of blueprints after the one that threw the `scheck`. Oddly, if `QuitGame` is called right after `RequestSingleStepIn`, then the game will exit out of PIE even though it went into debug mode. All C++ code would still execute, unfortunantly. This makes it best for `scheck` to be placed as close to the BlueprintCallable function as possible. The `scheck` macro returns so no code in it's scope will execute. 
+There is a way to mitigate the amount of code that executes, though. Unreal has a feature that isn't as used as often as it should. Just like in C++, C#, and other languages, Blueprints can have breakpoints. Calling the function `FKismetDebugUtilities::RequestSingleStepIn` forces the editor into debug mode and prevents the execution of blueprints after the one that threw the `scheck`. Oddly, if `QuitGame` is called right after `RequestSingleStepIn`, then the game will exit out of PIE even though it went into debug mode. All C++ code would still execute, unfortunately. This makes it best for `scheck` to be placed as close to the BlueprintCallable function as possible. The `scheck` macro returns so no code in its scope will execute. 
 
 ```cpp
 // Log the message to the more designer-friendly logger.
@@ -165,11 +164,11 @@ UKismetSystemLibrary::QuitGame(GEngine->GameViewport->GetWorld(), nullptr, EQuit
 return;
 ```
 
-`scheck` is not intended for C++ only code. Before `scheck` smartly asserts the PIE session, it makes several checks to ensure it is a PIE session and not standalone, the editor exists, and the C++ code's execution started from Blueprint. If any of these checks fail, then it will assert regularly, crashing the application. Fortunantly, this is expected, since the programmer is either working in C++ and the debugger will catch the assertion or it is a build of the game so it should crash completely.
+`scheck` is not intended for C++ only code. Before `scheck` smartly asserts the PIE session, it makes several checks to ensure it is a PIE session and not standalone, the editor exists, and the C++ code's execution started from Blueprint. If any of these checks fail, then it will assert regularly, crashing the application. Fortunately, this is expected, since the programmer is either working in C++ and the debugger will catch the assertion or it is a build of the game so it should crash completely.
 
 ## How to Install
 
-You can find the source code on [GitHub](https://github.com/jjasundry/SmartAsserts), along with the documentation in the readme. It is also published onto the Epic Marketplace (now Fab) as a [plugin](https://www.fab.com/listings/fbe2cfc8-c483-4c9b-a2ab-5d9090b1d6a4) The Epic launcher can install the plugin to Unreal automatically.
+You can find the source code on [GitHub](https://github.com/jjasundry/SmartAsserts), along with the documentation in the readme. It is also published onto the Epic Marketplace (now Fab) as a [plugin](https://www.fab.com/listings/fbe2cfc8-c483-4c9b-a2ab-5d9090b1d6a4). The Epic launcher can install the plugin to Unreal automatically.
 
 ## Demo
 
