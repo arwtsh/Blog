@@ -15,7 +15,7 @@ In game development, manager classes are vital to the game's core. Making these 
 
 ## Definition of Singletons
 
-A singleton is a class with only one instance, which is globally accessable. In Unity game development, singletons are very useful. Depending on the situation, singletons might be problematic. However, this discussion is about how to make singletons better, not alternatives to singletons. [Refactoring Guru](https://refactoring.guru/design-patterns/singleton) explains the pros and cons to the singleton pattern itself and when to use other patterns.
+A singleton is a class with only one instance, which is globally accessible. In Unity game development, singletons are very useful. Depending on the situation, singletons might be problematic. However, this discussion is about how to make singletons better, not alternatives to singletons. [Refactoring Guru](https://refactoring.guru/design-patterns/singleton) explains the pros and cons to the singleton pattern itself and when to use other patterns.
 
 ## Traditional Unity Singletons
 
@@ -43,9 +43,9 @@ If you're familiar with Unity you probably understand what is going on here. A S
 
 This implementation of the singleton pattern *can* work, but it is susceptible to user error and doesn't cooperate with tests. Let me elaborate.
 
-Singletons should have a known lifetime. In the above example, the singleton is created when it is first loaded in a scene, then it persists until the game stops. It is possible for a developer to create a test scene and forget to add the singleton to a GameObject, then the singleton would be null. Often, all singletons are placed on a single prefab. This makes it slightly easier to add the core systems of the game into a test scene and allows configs on the singletons to syncronize across scenes.
+Singletons should have a known lifetime. In the above example, the singleton is created when it is first loaded in a scene, then it persists until the game stops. It is possible for a developer to create a test scene and forget to add the singleton to a GameObject, then the singleton would be null. Often, all singletons are placed on a single prefab. This makes it slightly easier to add the core systems of the game into a test scene and allows configs on the singletons to synchronize across scenes.
 
-There's also the ability for developers to simply delete the singleton GameObject from the scene. The developers can also add duplicates of a singleton accidentally, such as by thinking the PlayerInput component should be on the player GameObject, not realizing the input component was on the prefab GameObject already. Fortunantly, duplicate singletons are automatically deleted; unfortunantly, the player was just deleted. These situations aren't likely and can be easily undone, but every developer has done something embarrassingly stupid that confused them for a while.
+There's also the ability for developers to simply delete the singleton GameObject from the scene. The developers can also add duplicates of a singleton accidentally, such as by thinking the PlayerInput component should be on the player GameObject, not realizing the input component was on the prefab GameObject already. Fortunatly, duplicate singletons are automatically deleted; unfortunatly, the player was just deleted. These situations aren't likely and can be easily undone, but every developer has done something embarrassingly stupid that confused them for a while.
 
 ## Solution
 
