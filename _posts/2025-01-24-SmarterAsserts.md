@@ -1,6 +1,6 @@
 ---
 title: Smarter Asserts
-description: Discusses a problem in Unreal's error handling and solves it by creating crashing only the PIE session.
+description: Discusses a problem in Unreal's error handling and solves it by creating custom asserts that crash only the PIE session.
 date: 2025-01-24 14:54:00 -0700
 categories: [Unreal, Plugins]
 tags: [unreal, plugin, tool, editor, logging, error handling]     # TAG names should always be lowercase
